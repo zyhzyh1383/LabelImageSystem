@@ -57,6 +57,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -86,6 +87,7 @@
     <Compile Include="Extensions\Extensions.List.cs" />
     <Compile Include="Extensions\Extensions.Nullable.cs" />
     <Compile Include="Extensions\Extensions.Validate.cs" />
+    <Compile Include="File\Base64ConvenrtHelper.cs" />
     <Compile Include="File\DirFileHelper.cs" />
     <Compile Include="File\FileDownHelper.cs" />
     <Compile Include="Linq\LinqExtensions.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Web\UserInfo.cs" />
     <Compile Include="Web\VerifyCode.cs" />
     <Compile Include="Web\WebHelper.cs" />
+    <Compile Include="WinForm\MessageShow.cs" />
     <Compile Include="XML\Xml.cs" />
   </ItemGroup>
   <ItemGroup>

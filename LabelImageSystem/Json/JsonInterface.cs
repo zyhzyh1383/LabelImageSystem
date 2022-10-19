@@ -9,6 +9,7 @@ using System.IO;
 using System.Drawing;
 using LabelImageSystem.Shapes;
 using System.Xml.Linq;
+using Zach.Util;
 
 namespace LabelImageSystem.Json
 {
@@ -88,7 +89,7 @@ namespace LabelImageSystem.Json
         public void Save(string filename, DrawShapes shapes, string fileSavename, int filesize)
         {
             ChangeDrawShapesToRootObj(shapes, filename, filesize);
-            MakeUpJosonFile(fileSavename);
+            MakeUpJosonFile2(fileSavename);
         }
 
         public JObject MakeUpJosonFile(string filename)
@@ -234,6 +235,111 @@ namespace LabelImageSystem.Json
                 }
                 m_vObj.regions.Add(region);
             }
+        }
+
+        public void MakeUpJosonFile2(string filename)
+        {
+            if (0 == m_vObj.regions.Count)
+            {
+                if (System.IO.File.Exists(Path.GetFullPath(filename)))
+                {
+                    File.Delete(Path.GetFullPath(filename));
+                }
+                //return null;
+            }
+
+            var labelmeEntity = new Labelme.LabelmeEntity();
+            labelmeEntity.version = "5.0.1";
+            labelmeEntity.flags = new Labelme.Flag();
+            labelmeEntity.imagePath = m_vObj.filename;
+            labelmeEntity.imageData = Base64ConvenrtHelper.FileToBase64(Path.GetFullPath(m_vObj.filename));
+            labelmeEntity.imageHeight = 0;
+            labelmeEntity.imageWidth = 0;
+            labelmeEntity.shapes = new List<Labelme.Shape>();
+            var labelTypes = m_vObj.regions.Select(r => r.region_attributes.type).Distinct().ToList();
+            foreach (string labelType in labelTypes)
+            {
+                var shape = new Labelme.Shape
+                {
+                    flags = new Labelme.Flag(),
+                    group_id = null,
+                    label = labelType,
+                    shape_type = "rectangle"
+                };
+                shape.points = new List<List<double>>();
+                var tempList = m_vObj.regions.FindAll(r => r.region_attributes.type == labelType);
+                foreach (var temp in tempList)
+                {
+                    var pointList = new List<double>();
+                    pointList.Add(temp.shape_attributes.x);
+                    pointList.Add(temp.shape_attributes.y);
+                    shape.points.Add(pointList);
+                }
+                labelmeEntity.shapes.Add(shape);
+            }
+            try
+            {
+                FileStream nFile = new FileStream(filename, FileMode.Create);
+                StreamWriter writer = new StreamWriter(nFile, Encoding.UTF8);
+                writer.Write(labelmeEntity.ToJson());
+                writer.Close();
+                nFile.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //for (int i = 0; i < m_vObj.regions.Count; i++)
+            //{
+            //    var shapes = new Labelme.Shapes
+            //    {
+            //        flags = null,
+            //        group_id = null,
+            //        label = m_vObj.regions[i].region_attributes.type,
+            //        shape_type = m_vObj.regions[i].shape_attributes.name == "rect" ? "rectangle" : "rectangle"
+            //    };
+            //    shapes.points = new List<List<double>>();
+
+            //    //    var region = new JObject();
+            //    //    var regattri = new JObject { { "type", m_vObj.regions[i].region_attributes.type } };
+            //    //    region.Add("region_attributes", regattri);
+
+            //    //    var shape = new JObject { { "name", m_vObj.regions[i].shape_attributes.name } };
+            //    //    if ("polygon" == m_vObj.regions[i].shape_attributes.name)
+            //    //    {
+            //    //        var arrX = new JArray(m_vObj.regions[i].shape_attributes.all_points_x.ToList());
+            //    //        var arrY = new JArray(m_vObj.regions[i].shape_attributes.all_points_y.ToList());
+            //    //        shape.Add("all_points_x", arrX);
+            //    //        shape.Add("all_points_y", arrY);
+            //    //    }
+            //    //    else if ("rect" == m_vObj.regions[i].shape_attributes.name)
+            //    //    {
+            //    //        shape.Add("x", m_vObj.regions[i].shape_attributes.x);
+            //    //        shape.Add("y", m_vObj.regions[i].shape_attributes.y);
+            //    //        shape.Add("width", m_vObj.regions[i].shape_attributes.width);
+            //    //        shape.Add("height", m_vObj.regions[i].shape_attributes.height);
+            //    //    }
+            //    //    region.Add("shape_attributes", shape);
+            //    //    regArray.Add(region);
+            //    //}
+
+            //    //rootObj.Add("regions", regArray);
+
+            //    //try
+            //    //{
+            //    //    FileStream nFile = new FileStream(filename, FileMode.Create);
+            //    //    StreamWriter writer = new StreamWriter(nFile, Encoding.UTF8);
+            //    //    writer.Write(rootObj.ToString());
+            //    //    writer.Close();
+            //    //    nFile.Close();
+            //    //}
+            //    //catch (Exception ex)
+            //    //{
+            //    //    throw ex;
+            //    //}
+
+            //    //return rootObj;
+            //}
         }
 
     }

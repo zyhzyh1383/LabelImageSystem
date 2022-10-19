@@ -8,15 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using Zach.Entity;
 using Zach.Service;
+using Zach.Util;
+using Zach.Util.WinForm;
 
 namespace LabelImageSystem
 {
-
-
     public partial class ManageObjectForm : Form
     {
-        List<ObejctDefine> m_vObjects;
+        List<ObejctDefineViewModel> m_vObjects;
         ObjectdefineService objectdefineService = new ObjectdefineService();
 
         public ManageObjectForm()
@@ -28,21 +29,21 @@ namespace LabelImageSystem
         public void GetOjectDefines(bool bInsertToDgv = false)
         {
             m_vObjects = null;
-            m_vObjects = new List<ObejctDefine>();
+            m_vObjects = new List<ObejctDefineViewModel>();
             var entityList = objectdefineService.GetList();
             entityList.ToList().ForEach(o =>
             {
-                ObejctDefine obj = new ObejctDefine();
-                obj.id = o.ID;
-                obj.objName = o.Name;
-                obj.objScript = o.script;
+                ObejctDefineViewModel obj = new ObejctDefineViewModel();
+                obj.ObjID = o.ObjID;
+                obj.ObjName = o.ObjName;
+                obj.ObjScript = o.ObjScript;
                 m_vObjects.Add(obj);
                 if (bInsertToDgv)
                 {
-                    int index = this.dataGridView_object.Rows.Add();
-                    this.dataGridView_object.Rows[index].Cells[0].Value = obj.id;
-                    this.dataGridView_object.Rows[index].Cells[1].Value = obj.objName;
-                    this.dataGridView_object.Rows[index].Cells[2].Value = obj.objScript;
+                    int index = this.dgvObject.Rows.Add();
+                    this.dgvObject.Rows[index].Cells[ObjID.Name].Value = obj.ObjID;
+                    this.dgvObject.Rows[index].Cells[ObjName.Name].Value = obj.ObjName;
+                    this.dgvObject.Rows[index].Cells[ObjScript.Name].Value = obj.ObjScript;
                 }
             });
         }
@@ -53,9 +54,78 @@ namespace LabelImageSystem
             GetOjectDefines(true);
         }
 
-        public List<ObejctDefine> GetObjectList()
+        public List<ObejctDefineViewModel> GetObjectList()
         {
             return m_vObjects;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (MessageShow.Confirm("确认保存?"))
+            {
+
+                    var objectdefines = new List<Objectdefine>();
+                    m_vObjects.ForEach(m =>
+                    {
+                        var temp = new Objectdefine
+                        {
+                            ObjID = m.ObjID,
+                            ObjName = m.ObjName,
+                            ObjScript = m.ObjScript,
+                        };
+                        objectdefines.Add(temp);
+                    });
+                    try
+                    {
+                        objectdefineService.Delete(objectdefines);
+                        objectdefines = new List<Objectdefine>();
+                        foreach (DataGridViewRow dgvr in dgvObject.Rows)
+                        {
+                            var temp = new Objectdefine
+                            {
+                                ObjName = dgvr.Cells[ObjName.Name].Value.ToString(),
+                                ObjScript = dgvr.Cells[ObjScript.Name].Value.ToString()
+                            };
+                            objectdefines.Add(temp);
+                        }
+                        var result = objectdefineService.Insert(objectdefines);
+                        GetOjectDefines(false);
+                        MessageShow.Show("保存成功");
+                    }
+                    catch
+                    {
+                        
+                    }
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            var index = dgvObject.CurrentCell.RowIndex;
+            if (index < 0) return;
+            var delList = new List<DataGridViewRow>();
+            foreach (DataGridViewRow dgvr in dgvObject.Rows)
+            {
+                var checkvalue = dgvr.Cells[CHKID.Name].Value.ToBool();
+                if (checkvalue)
+                    delList.Add(dgvr);
+            }
+            delList.ForEach(d =>
+            {
+                dgvObject.Rows.Remove(d);
+            });
+        }
+
+        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var index = dgvObject.CurrentCell.RowIndex;
+            if (index < 0) return;
+            dgvObject.Rows.RemoveAt(index);
+        }
+
+        private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dgvObject.Rows.Add();
         }
     }
 }

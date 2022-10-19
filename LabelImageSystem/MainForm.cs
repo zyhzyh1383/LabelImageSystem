@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
@@ -17,7 +12,7 @@ namespace LabelImageSystem
     public partial class MainForm : Form
     {
         private DrawShapes m_ShpesShow = new DrawShapes();
-        private DrawBase m_curDraw= null;
+        private DrawBase m_curDraw = null;
         private Rectangle m_vPicShowRect;
         /// <summary>
         /// 当前选中形状类型
@@ -34,7 +29,7 @@ namespace LabelImageSystem
         /// <summary>
         /// 目标定义列表
         /// </summary>
-        List<ObejctDefine> m_vObjectDefine;
+        List<ObejctDefineViewModel> m_vObjectDefine;
         /// <summary>
         /// 当前选中目标索引 对应于m_vObjectDefine
         /// </summary>
@@ -42,17 +37,17 @@ namespace LabelImageSystem
         /// <summary>
         /// json文件读写接口
         /// </summary>
-        JsonInterface m_JsonIT = new JsonInterface(); 
+        JsonInterface m_JsonIT = new JsonInterface();
 
 
         public MainForm()
         {
             InitializeComponent();
-            m_shapeType = ShapeTypeIndexes.Ploy;
+            m_shapeType = ConfigContext.shapeType;
             m_ObjectIndex = 0;
             m_bAutoSave = true;
         }
-        
+
         /// <summary>
         /// 窗体加载Load事件 初始化
         /// </summary>
@@ -115,6 +110,7 @@ namespace LabelImageSystem
             int hang = 10;
 
             RadioButton rdb = null;
+            groupBox_objTypes.Controls.Clear();
             for (int i = 0; i < m_vObjectDefine.Count; i++)
             {
                 if (width > 1000)
@@ -124,7 +120,7 @@ namespace LabelImageSystem
                 }
                 rdb = new RadioButton();
                 rdb.Name = "radioButton_obj" + i;
-                rdb.Text = m_vObjectDefine[i].objScript;
+                rdb.Text = m_vObjectDefine[i].ObjScript;
                 rdb.Location = new System.Drawing.Point(width, 2 * hang);
                 rdb.Click += new EventHandler(rdb_ClickChanged);
                 x = rdb.Text.Length;
@@ -133,8 +129,8 @@ namespace LabelImageSystem
                 groupBox_objTypes.Controls.Add(rdb);
             }
 
-            Control control =  this.FindControl("radioButton_obj" + m_ObjectIndex.ToString(), groupBox_objTypes);
-            if(null!=control)
+            Control control = this.FindControl("radioButton_obj" + m_ObjectIndex.ToString(), groupBox_objTypes);
+            if (null != control)
             {
                 ((RadioButton)control).Checked = true;
             }
@@ -148,8 +144,8 @@ namespace LabelImageSystem
             m_ObjectIndex = int.Parse(name.Substring("radioButton_obj".Length));
             if (null != m_ShpesShow && null != m_ShpesShow.m_CurrentSel)
             {
-                m_ShpesShow.m_CurrentSel.m_objName = m_vObjectDefine[m_ObjectIndex].objName.Clone() as string;
-                m_ShpesShow.m_CurrentSel.m_objScript = m_vObjectDefine[m_ObjectIndex].objScript.Clone() as string;
+                m_ShpesShow.m_CurrentSel.m_objName = m_vObjectDefine[m_ObjectIndex].ObjName.Clone() as string;
+                m_ShpesShow.m_CurrentSel.m_objScript = m_vObjectDefine[m_ObjectIndex].ObjScript.Clone() as string;
                 pictureBox1.Invalidate();
             }
         }
@@ -158,11 +154,11 @@ namespace LabelImageSystem
         {
             foreach (Control c in fatherControl.Controls)
             {
-                if (c.Name == controlName) 
+                if (c.Name == controlName)
                 {
-                    return c; 
+                    return c;
                 }
-            } 
+            }
             return null;
         }
 
@@ -247,7 +243,7 @@ namespace LabelImageSystem
                                 subNode.SelectedImageIndex = IconIndexes.Picture; //选择节点显示图片
                                 tNode.Nodes.Add(subNode);
                             }
-                            
+
                             //subNode.Nodes.Add("");    
                         }
                     }
@@ -262,13 +258,13 @@ namespace LabelImageSystem
 
         private int GetImagePositon()
         {
-            if(null == pictureBox1.Image)
+            if (null == pictureBox1.Image)
             {
                 return 0;
             }
             int originalWidth = this.pictureBox1.Image.Width;
             int originalHeight = this.pictureBox1.Image.Height;
- 
+
             PropertyInfo rectangleProperty = this.pictureBox1.GetType().GetProperty("ImageRectangle", BindingFlags.Instance | BindingFlags.NonPublic);
             m_vPicShowRect = (Rectangle)rectangleProperty.GetValue(this.pictureBox1, null);
 
@@ -280,11 +276,13 @@ namespace LabelImageSystem
             return 0;
         }
 
-        
+
         private void 目标管理ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ManageObjectForm fbd = new ManageObjectForm();
-            fbd.ShowDialog();
+            ManageObjectForm mof = new ManageObjectForm();
+            mof.ShowDialog();
+            m_vObjectDefine = new ManageObjectForm().GetObjectList();
+            initObjectShapeButtons();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -294,7 +292,7 @@ namespace LabelImageSystem
                 m_ShpesShow.Draw(e.Graphics);
             }
 
-            if (null!=m_curDraw&& m_curDraw.m_bIsDrawing)
+            if (null != m_curDraw && m_curDraw.m_bIsDrawing)
             {
                 m_curDraw.Draw(e.Graphics);
             }
@@ -307,7 +305,7 @@ namespace LabelImageSystem
             Region reg = new Region(rectPic);
             return reg.IsVisible(pt.X, pt.Y);
         }
-        
+
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -315,7 +313,7 @@ namespace LabelImageSystem
             {
                 return;
             }
- 
+
 
             //处理选中状态
             if (e.Button == MouseButtons.Left)
@@ -363,8 +361,8 @@ namespace LabelImageSystem
                     {
                         m_curDraw = new RectangleObj();
                         m_curDraw.MouseDown(e.Location);
-                        m_curDraw.m_objName = m_vObjectDefine[m_ObjectIndex].objName.Clone() as string;
-                        m_curDraw.m_objScript = m_vObjectDefine[m_ObjectIndex].objScript.Clone() as string;
+                        m_curDraw.m_objName = m_vObjectDefine[m_ObjectIndex].ObjName.Clone() as string;
+                        m_curDraw.m_objScript = m_vObjectDefine[m_ObjectIndex].ObjScript.Clone() as string;
                     }
                 }
             }
@@ -377,17 +375,17 @@ namespace LabelImageSystem
                         if (null == m_curDraw)
                         {
                             m_curDraw = new PolygonObj();
-                            m_curDraw.m_objName = m_vObjectDefine[m_ObjectIndex].objName.Clone() as string;
-                            m_curDraw.m_objScript = m_vObjectDefine[m_ObjectIndex].objScript.Clone() as string;
+                            m_curDraw.m_objName = m_vObjectDefine[m_ObjectIndex].ObjName.Clone() as string;
+                            m_curDraw.m_objScript = m_vObjectDefine[m_ObjectIndex].ObjScript.Clone() as string;
                         }
-                        
+
                         m_curDraw.MouseDown(e.Location);
                     }
                 }
             }
         }
-            
-       
+
+
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -398,7 +396,7 @@ namespace LabelImageSystem
 
             if (this.pictureBox1.Capture)
             {
-                if (this.m_ShpesShow != null && null == m_curDraw && null!=m_ShpesShow.m_CurrentCover)
+                if (this.m_ShpesShow != null && null == m_curDraw && null != m_ShpesShow.m_CurrentCover)
                 {
                     if (0 == m_ShpesShow.m_selType)
                     {
@@ -415,7 +413,7 @@ namespace LabelImageSystem
 
             if (null != m_curDraw && true == m_curDraw.m_bIsDrawing)
             {
-                if(ShapeTypeIndexes.Rect ==  m_shapeType)
+                if (ShapeTypeIndexes.Rect == m_shapeType)
                 {
                     if (e.Button == MouseButtons.Left)
                     {
@@ -432,7 +430,7 @@ namespace LabelImageSystem
                 }
             }
 
-            if ( null != m_ShpesShow)
+            if (null != m_ShpesShow)
             {
                 m_ShpesShow.getObj(e.Location);
 
@@ -465,7 +463,7 @@ namespace LabelImageSystem
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (null != m_curDraw &&0 == m_curDraw.MouseUp(e.Location))
+                    if (null != m_curDraw && 0 == m_curDraw.MouseUp(e.Location))
                     {
                         if (m_curDraw.CheckValid())
                         {
@@ -493,14 +491,14 @@ namespace LabelImageSystem
                 }
             }
 
-            if(e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
-               if( null!=m_ShpesShow.m_CurrentCover)
-               {
-                   m_ShpesShow.m_CurrentCover.ptGtoImage(m_ShpesShow.m_GIChange);
-               }
+                if (null != m_ShpesShow.m_CurrentCover)
+                {
+                    m_ShpesShow.m_CurrentCover.ptGtoImage(m_ShpesShow.m_GIChange);
+                }
             }
-            
+
             pictureBox1.Invalidate();
         }
 
@@ -517,11 +515,11 @@ namespace LabelImageSystem
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
             GetImagePositon();
-            if(null!=m_ShpesShow)
+            if (null != m_ShpesShow)
             {
                 m_ShpesShow.AllShapesImageToGrapic();
             }
-            
+
         }
 
         private void SaveLabelInfo()
@@ -538,7 +536,7 @@ namespace LabelImageSystem
         {
             SaveLabelInfo();
         }
-       
+
         private void UpdateAutoSaveState()
         {
             this.ToolStripMenuItem_StartAuto.Checked = m_bAutoSave;
@@ -547,7 +545,7 @@ namespace LabelImageSystem
             Font oldFont;
             Font newFont;
             oldFont = this.ToolStripMenuItem_AutoSave.Font;
-            
+
             if (m_bAutoSave)
             {
                 ToolStripMenuItem_AutoSave.Text = "切换图片自动保存: 启用";
@@ -559,12 +557,12 @@ namespace LabelImageSystem
             }
             else
             {
-                 ToolStripMenuItem_AutoSave.Text = "切换图片自动保存: 停用";
-                 if (oldFont.Bold)
-                 {
-                     newFont = new Font(oldFont, oldFont.Style & ~FontStyle.Bold);
-                     this.ToolStripMenuItem_AutoSave.Font = newFont;
-                 }
+                ToolStripMenuItem_AutoSave.Text = "切换图片自动保存: 停用";
+                if (oldFont.Bold)
+                {
+                    newFont = new Font(oldFont, oldFont.Style & ~FontStyle.Bold);
+                    this.ToolStripMenuItem_AutoSave.Font = newFont;
+                }
             }
         }
         private void ToolStripMenuItem_StartAuto_Click(object sender, EventArgs e)
@@ -614,6 +612,6 @@ namespace LabelImageSystem
                 m_ShpesShow.Clear();
             }
         }
-       
+
     }
 }

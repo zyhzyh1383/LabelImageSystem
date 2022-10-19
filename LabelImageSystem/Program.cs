@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Zach.Util;
 
 namespace LabelImageSystem
 {
@@ -16,7 +14,16 @@ namespace LabelImageSystem
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            InitConfig();
             Application.Run(new MainForm());
+        }
+
+        public static void InitConfig()
+        {
+            var configPath = AppDomain.CurrentDomain.BaseDirectory + "Config.json";
+            var jsonStr = DirFileHelper.ReadAllText(configPath);
+            var Config = jsonStr.ToObject<Config>();
+            ConfigContext.shapeType = Config.shapeType;
         }
     }
 }

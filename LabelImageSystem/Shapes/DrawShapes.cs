@@ -13,12 +13,12 @@ namespace LabelImageSystem.Shapes
     {
         public List<DrawBase> m_vList;    //形状列表
         public int m_selType = -1;        //选中状态  -1 未选中  0  选中整个目标  1 选中一个拖动点
-        public  DrawBase m_CurrentSel;     //当前选中目标
-        public  DrawBase m_CurrentCover;  //当前指针初几覆盖目标
+        public DrawBase m_CurrentSel;     //当前选中目标
+        public DrawBase m_CurrentCover;  //当前指针初几覆盖目标
         private DrawBase m_CurrentOri;    //记录原始位置
         private Point m_RejustStart;      //调整起始参考点位置
         public GraphicAndImageChange m_GIChange;   //图像到绘图坐标变换类
-        
+
         public DrawShapes()
         {
             m_vList = new List<DrawBase>();
@@ -36,15 +36,15 @@ namespace LabelImageSystem.Shapes
         }
 
         //通过目标名称索引目标描述
-        public void UpdateObjectScriptInfo(List<ObejctDefine> m_vObj)
+        public void UpdateObjectScriptInfo(List<ObejctDefineViewModel> m_vObj)
         {
             foreach (DrawBase draw in m_vList)
             {
-                for(int i = 0; i < m_vObj.Count; i++)
+                for (int i = 0; i < m_vObj.Count; i++)
                 {
-                    if (draw.m_objName == m_vObj[i].objName)
+                    if (draw.m_objName == m_vObj[i].ObjName)
                     {
-                        draw.m_objScript = m_vObj[i].objScript;
+                        draw.m_objScript = m_vObj[i].ObjScript;
                         break;
                     }
                 }
@@ -64,7 +64,7 @@ namespace LabelImageSystem.Shapes
         //删除目标
         public void Remove(DrawBase drawbase)
         {
-             m_vList.Remove(drawbase);
+            m_vList.Remove(drawbase);
         }
 
         public void Clear()
@@ -86,7 +86,7 @@ namespace LabelImageSystem.Shapes
             }
             else if (ShapeTypeIndexes.Ploy == draw.m_ShapeType)
             {
-                newdraw = new PolygonObj(((PolygonObj)draw)) ;
+                newdraw = new PolygonObj(((PolygonObj)draw));
             }
             m_vList.Add(newdraw);
             return 0;
@@ -139,7 +139,7 @@ namespace LabelImageSystem.Shapes
 
             foreach (DrawBase draw in m_vList)
             {
-                 draw.Draw(graphics);
+                draw.Draw(graphics);
             }
         }
 
@@ -147,7 +147,7 @@ namespace LabelImageSystem.Shapes
         public void getObj(Point pt)
         {
             m_selType = -1;
-            if(null !=m_CurrentCover)
+            if (null != m_CurrentCover)
             {
                 m_CurrentCover.m_bSolid = false;
             }
@@ -203,10 +203,10 @@ namespace LabelImageSystem.Shapes
                     pt2 = m_GIChange.fixPointInRegion(pt2);
                     ((RectangleObj)m_CurrentCover).Move(pt1, pt2);
                 }
-                else if(ShapeTypeIndexes.Ploy == m_CurrentOri.m_ShapeType)
+                else if (ShapeTypeIndexes.Ploy == m_CurrentOri.m_ShapeType)
                 {
                     Point[] vPt = ((PolygonObj)m_CurrentOri).vPoint.ToArray();
-                    for (int i = 0; i < vPt.Count(); i++ )
+                    for (int i = 0; i < vPt.Count(); i++)
                     {
                         vPt[i].X += pt.X - m_RejustStart.X;
                         vPt[i].Y += pt.Y - m_RejustStart.Y;
@@ -247,7 +247,7 @@ namespace LabelImageSystem.Shapes
                 }
                 else if (ShapeTypeIndexes.Ploy == m_CurrentOri.m_ShapeType)
                 {
-                   
+
                     if (-1 != m_CurrentOri.m_nSelPtIndex)
                     {
                         Point[] vPt = ((PolygonObj)m_CurrentOri).vPoint.ToArray();
@@ -259,8 +259,5 @@ namespace LabelImageSystem.Shapes
                 }
             }
         }
-
-
     }
-    
 }

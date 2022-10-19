@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace LabelImageSystem
 {
-    public class ObejctDefine
+    public class ObejctDefineViewModel
     {
-        public int id;
-        public string objName;
-        public string objScript;
+        public int ObjID;
+        public string ObjName;
+        public string ObjScript;
     }
 }

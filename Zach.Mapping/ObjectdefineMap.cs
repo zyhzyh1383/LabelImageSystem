@@ -10,9 +10,10 @@ namespace Zach.Mapping
 {
     public class ObjectdefineMap : EntityTypeConfiguration<Objectdefine>
     {
-        public ObjectdefineMap() 
+        public ObjectdefineMap()
         {
             this.ToTable("Objectdefine");
+            this.HasKey(o => o.ObjID);
         }
     }
 }

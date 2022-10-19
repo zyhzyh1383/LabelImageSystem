@@ -750,5 +750,17 @@ namespace Zach.Util
         }
         #endregion
 
+        #region 读取文件内容
+        /// <summary>
+        /// 读取文件内容
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string ReadAllText(string path)
+        {
+            return File.ReadAllText(path);
+        } 
+        #endregion
+
     }
 }
