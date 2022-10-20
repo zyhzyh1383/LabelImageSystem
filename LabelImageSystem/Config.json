@@ -1,5 +1,7 @@
 {
   "ShapeType": "0",
   "LabelmeVersion": "5.0.1",
-  "file_attributes": "Cpoyright © 福州国化智能技术有限公司 All Rights Reserved."
+  "file_attributes": "Cpoyright © 福州国化智能技术有限公司 All Rights Reserved.",
+  "coco": "python labelme2coco.py --input_dir images --output_dir coco --labels labels.txt",
+  "train": "python PaddleDetection/tools/train.py -c PaddleDetection/configs/faster_rcnn/faster_rcnn_r50_vd_fpn_ssld_2x_coco.yml --eval --use_vdl=true"
 }

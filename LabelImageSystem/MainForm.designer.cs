@@ -52,7 +52,6 @@ namespace LabelImageSystem
             this.directoryTree = new System.Windows.Forms.TreeView();
             this.directoryIcons = new System.Windows.Forms.ImageList(this.components);
             this.filesIcons = new System.Windows.Forms.ImageList(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.目标类型ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,13 +59,17 @@ namespace LabelImageSystem
             this.ToolStripMenuItem_AutoSave = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_StartAuto = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_StopAuto = new System.Windows.Forms.ToolStripMenuItem();
+            this.数据集转cocoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.训练cocoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButton_shape2 = new System.Windows.Forms.RadioButton();
             this.radioButton_shape1 = new System.Windows.Forms.RadioButton();
             this.groupBox_objTypes = new System.Windows.Forms.GroupBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textBox_Process = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // directoryTree
@@ -78,7 +81,7 @@ namespace LabelImageSystem
             this.directoryTree.Location = new System.Drawing.Point(12, 69);
             this.directoryTree.Name = "directoryTree";
             this.directoryTree.SelectedImageIndex = 0;
-            this.directoryTree.Size = new System.Drawing.Size(323, 551);
+            this.directoryTree.Size = new System.Drawing.Size(323, 676);
             this.directoryTree.TabIndex = 0;
             this.directoryTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.directoryTree_BeforeExpand);
             this.directoryTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.directoryTree_AfterExpand);
@@ -101,34 +104,18 @@ namespace LabelImageSystem
             this.filesIcons.TransparentColor = System.Drawing.Color.Maroon;
             this.filesIcons.Images.SetKeyName(0, "Closed Folder.ico");
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(360, 27);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(889, 479);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
-            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
-            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
-            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.设置ToolStripMenuItem,
             this.ToolStripMenuItem_SaveLabel,
-            this.ToolStripMenuItem_AutoSave});
+            this.ToolStripMenuItem_AutoSave,
+            this.数据集转cocoToolStripMenuItem,
+            this.训练cocoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1287, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(1648, 25);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -181,6 +168,20 @@ namespace LabelImageSystem
             this.ToolStripMenuItem_StopAuto.Text = "停用自动保存";
             this.ToolStripMenuItem_StopAuto.Click += new System.EventHandler(this.ToolStripMenuItem_StopAuto_Click);
             // 
+            // 数据集转cocoToolStripMenuItem
+            // 
+            this.数据集转cocoToolStripMenuItem.Name = "数据集转cocoToolStripMenuItem";
+            this.数据集转cocoToolStripMenuItem.Size = new System.Drawing.Size(96, 21);
+            this.数据集转cocoToolStripMenuItem.Text = "数据集转coco";
+            this.数据集转cocoToolStripMenuItem.Click += new System.EventHandler(this.数据集转cocoToolStripMenuItem_Click);
+            // 
+            // 训练cocoToolStripMenuItem
+            // 
+            this.训练cocoToolStripMenuItem.Name = "训练cocoToolStripMenuItem";
+            this.训练cocoToolStripMenuItem.Size = new System.Drawing.Size(72, 21);
+            this.训练cocoToolStripMenuItem.Text = "训练coco";
+            this.训练cocoToolStripMenuItem.Click += new System.EventHandler(this.训练cocoToolStripMenuItem_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.radioButton_shape2);
@@ -220,18 +221,46 @@ namespace LabelImageSystem
             // 
             this.groupBox_objTypes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox_objTypes.Location = new System.Drawing.Point(360, 512);
+            this.groupBox_objTypes.Location = new System.Drawing.Point(360, 639);
             this.groupBox_objTypes.Name = "groupBox_objTypes";
-            this.groupBox_objTypes.Size = new System.Drawing.Size(889, 108);
+            this.groupBox_objTypes.Size = new System.Drawing.Size(927, 106);
             this.groupBox_objTypes.TabIndex = 6;
             this.groupBox_objTypes.TabStop = false;
             this.groupBox_objTypes.Text = "目标类型";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.Location = new System.Drawing.Point(360, 27);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(927, 606);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
+            // 
+            // textBox_Process
+            // 
+            this.textBox_Process.Location = new System.Drawing.Point(1293, 27);
+            this.textBox_Process.Multiline = true;
+            this.textBox_Process.Name = "textBox_Process";
+            this.textBox_Process.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.textBox_Process.Size = new System.Drawing.Size(343, 718);
+            this.textBox_Process.TabIndex = 8;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1287, 632);
+            this.ClientSize = new System.Drawing.Size(1648, 757);
+            this.Controls.Add(this.textBox_Process);
             this.Controls.Add(this.groupBox_objTypes);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.directoryTree);
@@ -242,11 +271,11 @@ namespace LabelImageSystem
             this.Text = "LabelImageSystem";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -259,7 +288,6 @@ namespace LabelImageSystem
         private System.Windows.Forms.TreeView directoryTree;
         private System.Windows.Forms.ImageList directoryIcons;
         private System.Windows.Forms.ImageList filesIcons;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 目标类型ToolStripMenuItem;
@@ -271,7 +299,10 @@ namespace LabelImageSystem
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_AutoSave;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_StartAuto;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_StopAuto;
-
+        private System.Windows.Forms.ToolStripMenuItem 数据集转cocoToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox textBox_Process;
+        private System.Windows.Forms.ToolStripMenuItem 训练cocoToolStripMenuItem;
     }
 }
 

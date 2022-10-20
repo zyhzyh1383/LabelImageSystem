@@ -26,6 +26,8 @@ namespace LabelImageSystem
             ConfigContext.shapeType = Config.shapeType;
             ConfigContext.LabelmeVersion = Config.LabelmeVersion;
             ConfigContext.file_attributes = Config.file_attributes;
+            ConfigContext.coco=Config.coco;
+            ConfigContext.train = Config.train;
         }
     }
 }

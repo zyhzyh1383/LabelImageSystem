@@ -7,6 +7,13 @@ using System.Reflection;
 using LabelImageSystem.Json;
 using LabelImageSystem.Shapes;
 using Zach.Util;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Reflection.Emit;
+using System.Diagnostics;
+using System.Text;
+using Zach.Util.WinForm;
 
 namespace LabelImageSystem
 {
@@ -44,6 +51,7 @@ namespace LabelImageSystem
         public MainForm()
         {
             InitializeComponent();
+            Control.CheckForIllegalCrossThreadCalls = false;
             m_shapeType = ConfigContext.shapeType;
             m_ObjectIndex = 0;
             m_bAutoSave = true;
@@ -614,5 +622,66 @@ namespace LabelImageSystem
             }
         }
 
+        private void 数据集转cocoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                InvokePython(ConfigContext.coco);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void InvokePython(string command)
+        {
+            Process p;
+            string writeLine = command;
+            p = new Process();
+            //设置要启动的应用程序
+            p.StartInfo.FileName = "cmd.exe";
+            //是否使用操作系统shell启动
+            p.StartInfo.UseShellExecute = false;
+            // 接受来自调用程序的输入信息
+            p.StartInfo.RedirectStandardInput = true;
+            //输出信息
+            p.StartInfo.RedirectStandardOutput = true;
+            // 输出错误
+            p.StartInfo.RedirectStandardError = true;
+            //不显示程序窗口
+            p.StartInfo.CreateNoWindow = true;
+            p.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+            //启动程序
+            p.Start();
+            //向cmd窗口发送输入信息
+            p.StandardInput.WriteLine(writeLine);
+            p.StandardInput.AutoFlush = true;
+            p.BeginOutputReadLine();
+        }
+
+        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            if (!String.IsNullOrEmpty(outLine.Data))
+            {
+                StringBuilder sb = new StringBuilder(this.textBox_Process.Text);
+                this.textBox_Process.Text = sb.AppendLine(outLine.Data).ToString();
+                this.textBox_Process.SelectionStart = this.textBox_Process.Text.Length;
+                this.textBox_Process.ScrollToCaret();
+            }
+        }
+
+        private void 训练cocoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                InvokePython(ConfigContext.train);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }

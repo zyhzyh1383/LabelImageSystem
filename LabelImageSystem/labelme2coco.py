@@ -1,3 +1,4 @@
+#-– coding:utf8 ––
 # 命令行执行：  python labelme2coco.py --input_dir images --output_dir coco --labels labels.txt
 # 输出文件夹必须为空文件夹
 
