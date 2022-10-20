@@ -31,7 +31,7 @@ namespace Zach.Util
                     string path = rootPath + filePath;
                     if (DirFileHelper.IsExistFile(path))
                     {
-                        string content = File.ReadAllText(path, Encoding.UTF8);
+                        string content =System.IO.File.ReadAllText(path, Encoding.UTF8);
                         if (Config.GetValue("JsCompressor") == "true")
                         {
                             content = javaScriptCompressor.Compress(content);

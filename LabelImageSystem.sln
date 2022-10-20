@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Service", "Zach.Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Mapping", "Zach.Mapping\Zach.Mapping.csproj", "{D19585AB-4611-436E-B6FD-C01AF2EDC504}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Test", "Zach.Test\Zach.Test.csproj", "{43C5D93D-0BA0-4145-9B07-3C777E603E46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Loger", "Zach.Log\Zach.Loger.csproj", "{93BB5880-3AFE-4174-B441-3E808D1193A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +87,14 @@ Global
 		{D19585AB-4611-436E-B6FD-C01AF2EDC504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D19585AB-4611-436E-B6FD-C01AF2EDC504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D19585AB-4611-436E-B6FD-C01AF2EDC504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43C5D93D-0BA0-4145-9B07-3C777E603E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43C5D93D-0BA0-4145-9B07-3C777E603E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43C5D93D-0BA0-4145-9B07-3C777E603E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43C5D93D-0BA0-4145-9B07-3C777E603E46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

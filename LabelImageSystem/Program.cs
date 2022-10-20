@@ -24,6 +24,8 @@ namespace LabelImageSystem
             var jsonStr = DirFileHelper.ReadAllText(configPath);
             var Config = jsonStr.ToObject<Config>();
             ConfigContext.shapeType = Config.shapeType;
+            ConfigContext.LabelmeVersion = Config.LabelmeVersion;
+            ConfigContext.file_attributes = Config.file_attributes;
         }
     }
 }

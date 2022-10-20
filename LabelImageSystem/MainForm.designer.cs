@@ -78,7 +78,7 @@ namespace LabelImageSystem
             this.directoryTree.Location = new System.Drawing.Point(12, 69);
             this.directoryTree.Name = "directoryTree";
             this.directoryTree.SelectedImageIndex = 0;
-            this.directoryTree.Size = new System.Drawing.Size(323, 555);
+            this.directoryTree.Size = new System.Drawing.Size(323, 551);
             this.directoryTree.TabIndex = 0;
             this.directoryTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.directoryTree_BeforeExpand);
             this.directoryTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.directoryTree_AfterExpand);
@@ -110,7 +110,7 @@ namespace LabelImageSystem
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(360, 27);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(889, 491);
+            this.pictureBox1.Size = new System.Drawing.Size(889, 479);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -121,6 +121,7 @@ namespace LabelImageSystem
             // 
             // menuStrip1
             // 
+            this.menuStrip1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.设置ToolStripMenuItem,
             this.ToolStripMenuItem_SaveLabel,
@@ -219,9 +220,9 @@ namespace LabelImageSystem
             // 
             this.groupBox_objTypes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox_objTypes.Location = new System.Drawing.Point(360, 535);
+            this.groupBox_objTypes.Location = new System.Drawing.Point(360, 512);
             this.groupBox_objTypes.Name = "groupBox_objTypes";
-            this.groupBox_objTypes.Size = new System.Drawing.Size(889, 89);
+            this.groupBox_objTypes.Size = new System.Drawing.Size(889, 108);
             this.groupBox_objTypes.TabIndex = 6;
             this.groupBox_objTypes.TabStop = false;
             this.groupBox_objTypes.Text = "目标类型";
@@ -230,7 +231,7 @@ namespace LabelImageSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1287, 636);
+            this.ClientSize = new System.Drawing.Size(1287, 632);
             this.Controls.Add(this.groupBox_objTypes);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.directoryTree);

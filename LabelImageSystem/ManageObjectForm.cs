@@ -59,54 +59,12 @@ namespace LabelImageSystem
             return m_vObjects;
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        public void RemoveDataGridViewRow()
         {
-            if (MessageShow.Confirm("确认保存?"))
-            {
-
-                    var objectdefines = new List<Objectdefine>();
-                    m_vObjects.ForEach(m =>
-                    {
-                        var temp = new Objectdefine
-                        {
-                            ObjID = m.ObjID,
-                            ObjName = m.ObjName,
-                            ObjScript = m.ObjScript,
-                        };
-                        objectdefines.Add(temp);
-                    });
-                    try
-                    {
-                        objectdefineService.Delete(objectdefines);
-                        objectdefines = new List<Objectdefine>();
-                        foreach (DataGridViewRow dgvr in dgvObject.Rows)
-                        {
-                            var temp = new Objectdefine
-                            {
-                                ObjName = dgvr.Cells[ObjName.Name].Value.ToString(),
-                                ObjScript = dgvr.Cells[ObjScript.Name].Value.ToString()
-                            };
-                            objectdefines.Add(temp);
-                        }
-                        var result = objectdefineService.Insert(objectdefines);
-                        GetOjectDefines(false);
-                        MessageShow.Show("保存成功");
-                    }
-                    catch
-                    {
-                        
-                    }
-            }
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            var index = dgvObject.CurrentCell.RowIndex;
-            if (index < 0) return;
             var delList = new List<DataGridViewRow>();
             foreach (DataGridViewRow dgvr in dgvObject.Rows)
             {
-                var checkvalue = dgvr.Cells[CHKID.Name].Value.ToBool();
+                var checkvalue = dgvr.Cells[CHKID.Name].EditedFormattedValue.ToBool();
                 if (checkvalue)
                     delList.Add(dgvr);
             }
@@ -116,11 +74,54 @@ namespace LabelImageSystem
             });
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (MessageShow.Confirm("确认保存?"))
+            {
+
+                var objectdefines = new List<Objectdefine>();
+                m_vObjects.ForEach(m =>
+                {
+                    var temp = new Objectdefine
+                    {
+                        ObjID = m.ObjID,
+                        ObjName = m.ObjName,
+                        ObjScript = m.ObjScript,
+                    };
+                    objectdefines.Add(temp);
+                });
+                try
+                {
+                    objectdefineService.Delete(objectdefines);
+                    objectdefines = new List<Objectdefine>();
+                    foreach (DataGridViewRow dgvr in dgvObject.Rows)
+                    {
+                        var temp = new Objectdefine
+                        {
+                            ObjName = dgvr.Cells[ObjName.Name].Value.ToString(),
+                            ObjScript = dgvr.Cells[ObjScript.Name].Value.ToString()
+                        };
+                        objectdefines.Add(temp);
+                    }
+                    var result = objectdefineService.Insert(objectdefines);
+                    GetOjectDefines(false);
+                    MessageShow.Show("保存成功");
+                }
+                catch (Exception ex)
+                {
+                    MessageShow.Show(ex.Message);
+                }
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            RemoveDataGridViewRow();
+        }
+
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var index = dgvObject.CurrentCell.RowIndex;
-            if (index < 0) return;
-            dgvObject.Rows.RemoveAt(index);
+            RemoveDataGridViewRow();
         }
 
         private void 新增ToolStripMenuItem_Click(object sender, EventArgs e)

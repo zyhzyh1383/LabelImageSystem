@@ -32,6 +32,14 @@ namespace LabelImageSystem.Labelme
         /// 
         /// </summary>
         public Flag flags { get; set; }
+
+        public int x { get; set; }
+
+        public int y { get; set; }
+
+        public int width { get; set; }
+
+        public int height { get; set; }
     }
 
     public class LabelmeEntity
@@ -64,6 +72,14 @@ namespace LabelImageSystem.Labelme
         /// 
         /// </summary>
         public int imageWidth { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string size { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string file_attributes { get; set; }
     }
 
 }

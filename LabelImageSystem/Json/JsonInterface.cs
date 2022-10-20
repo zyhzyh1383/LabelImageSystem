@@ -1,220 +1,131 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Drawing;
 using LabelImageSystem.Shapes;
-using System.Xml.Linq;
 using Zach.Util;
+using Zach.Loger;
+using LabelImageSystem.Labelme;
 
 namespace LabelImageSystem.Json
 {
     public class JsonInterface
     {
-        public RootObject m_vObj;   //标定信息结构体
-        public bool isError = false;
+        /// <summary>
+        /// 标定信息结构体
+        /// </summary>
+        public RootObject gRootObject;
 
-        public DrawShapes Load(string fileName)
+        /// <summary>
+        /// 加载json标注文件
+        /// </summary>
+        /// <param name="jsonFileName"></param>
+        /// <returns></returns>
+        public DrawShapes LoadJsonFileName(string jsonFileName)
         {
-
-            if (!File.Exists(fileName))
+            try
             {
-                return null;
-            }
-
-            StreamReader sr = new StreamReader(fileName, System.Text.Encoding.UTF8);
-            string jsonStr = sr.ReadToEnd();
-            sr.Close();
-            if (string.IsNullOrEmpty(jsonStr))
-                return null;
-
-            m_vObj = new RootObject();
-            JObject jsonObj = null;
-            jsonObj = JObject.Parse(jsonStr);
-            if (jsonObj.Count == 1)
-                this.isError = true;
-            else
-            {
-                m_vObj.filename = (string)jsonObj["filename"];
-                m_vObj.size = (string)jsonObj["size"];
-                m_vObj.file_attributes = (string)jsonObj["file_attributes"];
-                m_vObj.regions = new List<Regions>();
-
-                JArray jlist = JArray.Parse(jsonObj["regions"].ToString());
-
-                for (int i = 0; i < jlist.Count; ++i)  //遍历JArray  
+                if (!DirFileHelper.IsExistFile(jsonFileName)) return null;
+                var jsonStr = DirFileHelper.ReadAllText(jsonFileName);
+                if (string.IsNullOrEmpty(jsonStr)) return null;
+                gRootObject = new RootObject();
+                LabelmeEntity labelmeEntity = jsonStr.ToObject<LabelmeEntity>();
+                gRootObject.filename = labelmeEntity.imagePath;
+                gRootObject.size = labelmeEntity.size;
+                gRootObject.file_attributes = labelmeEntity.file_attributes ?? ConfigContext.file_attributes;
+                gRootObject.regions = new List<Regions>();
+                foreach (var shape in labelmeEntity.shapes)
                 {
                     Regions region = new Regions();
-                    JObject tempo = JObject.Parse(jlist[i].ToString());
                     region.region_attributes = new Region_attributes();
                     region.shape_attributes = new Shape_attributes();
-                    region.region_attributes.type = (string)tempo["region_attributes"]["type"];
-                    region.shape_attributes.name = (string)tempo["shape_attributes"]["name"];
-                    if ("polygon" == region.shape_attributes.name)
+                    region.region_attributes.type = shape.label;
+                    region.shape_attributes.name = shape.shape_type;
+                    if ("polygon" == region.shape_attributes.name)//多边形区域
                     {
                         region.shape_attributes.all_points_x = new List<int>();
                         region.shape_attributes.all_points_y = new List<int>();
-                        JArray jPtlist = JArray.Parse(tempo["shape_attributes"]["all_points_x"].ToString());
-                        for (int npt = 0; npt < jPtlist.Count; ++npt)
+                        foreach (var p in shape.points)
                         {
-                            region.shape_attributes.all_points_x.Add((int)jPtlist[npt]);
-                        }
-
-                        jPtlist = JArray.Parse(tempo["shape_attributes"]["all_points_y"].ToString());
-                        for (int npt = 0; npt < jPtlist.Count; ++npt)
-                        {
-                            region.shape_attributes.all_points_y.Add((int)jPtlist[npt]);
+                            region.shape_attributes.all_points_x.Add(p[0].ToInt());
+                            region.shape_attributes.all_points_y.Add(p[1].ToInt());
                         }
                     }
-                    else if ("rect" == region.shape_attributes.name)
+                    else if ("rectangle" == region.shape_attributes.name)//矩形区域
                     {
-                        region.shape_attributes.x = (int)tempo["shape_attributes"]["x"];
-                        region.shape_attributes.y = (int)tempo["shape_attributes"]["y"];
-                        region.shape_attributes.width = (int)tempo["shape_attributes"]["width"];
-                        region.shape_attributes.height = (int)tempo["shape_attributes"]["height"];
+                        region.shape_attributes.x = shape.points[0][0].ToInt();
+                        region.shape_attributes.y = shape.points[0][1].ToInt();
+                        region.shape_attributes.width = shape.points[1][0].ToInt() - shape.points[0][0].ToInt();
+                        region.shape_attributes.height = shape.points[1][1].ToInt() - shape.points[0][1].ToInt();
                     }
-
-                    m_vObj.regions.Add(region);
+                    gRootObject.regions.Add(region);
                 }
-            }
-
-            return ChangeRootObjToDrawShapes();
-        }
-
-        //保存形状列表掉配置文件
-        public void Save(string filename, DrawShapes shapes, string fileSavename, int filesize)
-        {
-            ChangeDrawShapesToRootObj(shapes, filename, filesize);
-            MakeUpJosonFile2(fileSavename);
-        }
-
-        public JObject MakeUpJosonFile(string filename)
-        {
-            if (0 == m_vObj.regions.Count)
-            {
-                if (System.IO.File.Exists(Path.GetFullPath(filename)))
-                {
-                    File.Delete(Path.GetFullPath(filename));
-                }
-                return null;
-            }
-
-            var rootObj = new JObject { { "filename", m_vObj.filename }, { "size", m_vObj.size.ToString() } };
-            rootObj.Add("file_attributes", "@Qingshui Cheng@Labixiaoxindian @ All Right Reserved!");
-
-            var regArray = new JArray();
-            for (int i = 0; i < m_vObj.regions.Count; i++)
-            {
-                var region = new JObject();
-                var regattri = new JObject { { "type", m_vObj.regions[i].region_attributes.type } };
-                region.Add("region_attributes", regattri);
-
-                var shape = new JObject { { "name", m_vObj.regions[i].shape_attributes.name } };
-                if ("polygon" == m_vObj.regions[i].shape_attributes.name)
-                {
-                    var arrX = new JArray(m_vObj.regions[i].shape_attributes.all_points_x.ToList());
-                    var arrY = new JArray(m_vObj.regions[i].shape_attributes.all_points_y.ToList());
-                    shape.Add("all_points_x", arrX);
-                    shape.Add("all_points_y", arrY);
-                }
-                else if ("rect" == m_vObj.regions[i].shape_attributes.name)
-                {
-                    shape.Add("x", m_vObj.regions[i].shape_attributes.x);
-                    shape.Add("y", m_vObj.regions[i].shape_attributes.y);
-                    shape.Add("width", m_vObj.regions[i].shape_attributes.width);
-                    shape.Add("height", m_vObj.regions[i].shape_attributes.height);
-                }
-                region.Add("shape_attributes", shape);
-                regArray.Add(region);
-            }
-
-            rootObj.Add("regions", regArray);
-
-            try
-            {
-                FileStream nFile = new FileStream(filename, FileMode.Create);
-                StreamWriter writer = new StreamWriter(nFile, Encoding.UTF8);
-                writer.Write(rootObj.ToString());
-                writer.Close();
-                nFile.Close();
+                return RootObjectConvertToDrawShapes();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
-            return rootObj;
         }
 
-        public DrawShapes ChangeRootObjToDrawShapes()
+        /// <summary>
+        /// RootObject转换成DrawShapes
+        /// </summary>
+        /// <returns></returns>
+        public DrawShapes RootObjectConvertToDrawShapes()
         {
             DrawShapes drawShapes = new DrawShapes();
-            for (int i = 0; i < m_vObj.regions.Count; i++)
+            for (int i = 0; i < gRootObject.regions.Count; i++)
             {
-                if ("polygon" == m_vObj.regions[i].shape_attributes.name)
+                if ("polygon" == gRootObject.regions[i].shape_attributes.name)
                 {
                     PolygonObj shape = new PolygonObj();
-                    shape.m_objName = m_vObj.regions[i].region_attributes.type;
-                    for (int m = 0; m < m_vObj.regions[i].shape_attributes.all_points_x.Count; m++)
+                    shape.m_objName = gRootObject.regions[i].region_attributes.type;
+                    for (int m = 0; m < gRootObject.regions[i].shape_attributes.all_points_x.Count; m++)
                     {
-                        Point pt = new Point(m_vObj.regions[i].shape_attributes.all_points_x[m], m_vObj.regions[i].shape_attributes.all_points_y[m]);
+                        Point pt = new Point(gRootObject.regions[i].shape_attributes.all_points_x[m], gRootObject.regions[i].shape_attributes.all_points_y[m]);
                         shape.vPtOriImage.Add(pt);
                     }
                     drawShapes.m_vList.Add(shape);
                 }
-                else if ("rect" == m_vObj.regions[i].shape_attributes.name)
+                else if ("rectangle" == gRootObject.regions[i].shape_attributes.name)
                 {
                     RectangleObj shape = new RectangleObj();
-                    shape.m_objName = m_vObj.regions[i].region_attributes.type;
-                    shape.m_ptStartOri.X = m_vObj.regions[i].shape_attributes.x;
-                    shape.m_ptStartOri.Y = m_vObj.regions[i].shape_attributes.y;
-                    shape.m_ptEndOri.X = m_vObj.regions[i].shape_attributes.x + m_vObj.regions[i].shape_attributes.width;
-                    shape.m_ptEndOri.Y = m_vObj.regions[i].shape_attributes.y + m_vObj.regions[i].shape_attributes.height;
+                    shape.m_objName = gRootObject.regions[i].region_attributes.type;
+                    shape.m_ptStartOri.X = gRootObject.regions[i].shape_attributes.x;
+                    shape.m_ptStartOri.Y = gRootObject.regions[i].shape_attributes.y;
+                    shape.m_ptEndOri.X = gRootObject.regions[i].shape_attributes.x + gRootObject.regions[i].shape_attributes.width;
+                    shape.m_ptEndOri.Y = gRootObject.regions[i].shape_attributes.y + gRootObject.regions[i].shape_attributes.height;
                     drawShapes.m_vList.Add(shape);
                 }
             }
-
             return drawShapes;
         }
 
-        public void ChangeDrawShapesToRootObj(DrawShapes drawShapes, string filename, int filesize)
+        /// <summary>
+        /// 创建标定信息结构体
+        /// </summary>
+        /// <param name="drawShapes"></param>
+        /// <param name="imageFilePath"></param>
+        /// <param name="imageFileSize"></param>
+        public void CreateRootObj(DrawShapes drawShapes, string imageFilePath, int imageFileSize)
         {
-            System.IO.FileInfo fileInfo = null;
-            try
-            {
-                fileInfo = new System.IO.FileInfo(filename);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            // 如果文件存在
-            if (fileInfo != null && fileInfo.Exists)
-            {
-                filesize = (int)fileInfo.Length;
-            }
-
-
-            m_vObj = new RootObject();
-            m_vObj.filename = filename.Substring(filename.LastIndexOf('\\') + 1);
-            m_vObj.size = filesize.ToString();
-            m_vObj.file_attributes = "@chengqingshui@citic";
-            m_vObj.regions = new List<Regions>();
-
-            for (int i = 0; i < drawShapes.m_vList.Count; ++i)  //遍历JArray  
+            System.IO.FileInfo fileInfo = new System.IO.FileInfo(imageFilePath);
+            if (fileInfo != null && fileInfo.Exists) imageFileSize = (int)fileInfo.Length;
+            gRootObject = new RootObject();
+            gRootObject.filename = imageFilePath.Substring(imageFilePath.LastIndexOf('\\') + 1);
+            gRootObject.size = imageFileSize.ToString();
+            gRootObject.file_attributes = ConfigContext.file_attributes;
+            gRootObject.regions = new List<Regions>();
+            for (int i = 0; i < drawShapes.m_vList.Count; ++i)
             {
                 Regions region = new Regions();
                 region.region_attributes = new Region_attributes();
                 region.shape_attributes = new Shape_attributes();
                 region.region_attributes.type = drawShapes.m_vList[i].m_objName;
-
                 if (ShapeTypeIndexes.Rect == drawShapes.m_vList[i].m_ShapeType)
                 {
-                    region.shape_attributes.name = "rect";
+                    region.shape_attributes.name = "rectangle";
                     RectangleObj rect = (RectangleObj)drawShapes.m_vList[i];
                     region.shape_attributes.x = rect.m_ptStartOri.X < rect.m_ptEndOri.X ? rect.m_ptStartOri.X : rect.m_ptEndOri.X;
                     region.shape_attributes.y = rect.m_ptStartOri.Y < rect.m_ptEndOri.Y ? rect.m_ptStartOri.Y : rect.m_ptEndOri.Y;
@@ -233,114 +144,115 @@ namespace LabelImageSystem.Json
                         region.shape_attributes.all_points_y.Add(poly.vPtOriImage[m].Y);
                     }
                 }
-                m_vObj.regions.Add(region);
+                gRootObject.regions.Add(region);
             }
         }
 
-        public void MakeUpJosonFile2(string filename)
+        /// <summary>
+        /// 创建json文件
+        /// </summary>
+        /// <param name="imageFilePath">图片文件路径</param>
+        /// <param name="jsonFileSaveName">json文件保存路径</param>
+        public void CreateJsonFile(string imageFilePath, string jsonFileSaveName)
         {
-            if (0 == m_vObj.regions.Count)
+            if (gRootObject.regions.Count == 0)
             {
-                if (System.IO.File.Exists(Path.GetFullPath(filename)))
+                if (DirFileHelper.IsExistFile(Path.GetFullPath(jsonFileSaveName)))
                 {
-                    File.Delete(Path.GetFullPath(filename));
+                    File.Delete(Path.GetFullPath(jsonFileSaveName));
                 }
-                //return null;
-            }
-
-            var labelmeEntity = new Labelme.LabelmeEntity();
-            labelmeEntity.version = "5.0.1";
-            labelmeEntity.flags = new Labelme.Flag();
-            labelmeEntity.imagePath = m_vObj.filename;
-            labelmeEntity.imageData = Base64ConvenrtHelper.FileToBase64(Path.GetFullPath(m_vObj.filename));
-            labelmeEntity.imageHeight = 0;
-            labelmeEntity.imageWidth = 0;
-            labelmeEntity.shapes = new List<Labelme.Shape>();
-            var labelTypes = m_vObj.regions.Select(r => r.region_attributes.type).Distinct().ToList();
-            foreach (string labelType in labelTypes)
-            {
-                var shape = new Labelme.Shape
-                {
-                    flags = new Labelme.Flag(),
-                    group_id = null,
-                    label = labelType,
-                    shape_type = "rectangle"
-                };
-                shape.points = new List<List<double>>();
-                var tempList = m_vObj.regions.FindAll(r => r.region_attributes.type == labelType);
-                foreach (var temp in tempList)
-                {
-                    var pointList = new List<double>();
-                    pointList.Add(temp.shape_attributes.x);
-                    pointList.Add(temp.shape_attributes.y);
-                    shape.points.Add(pointList);
-                }
-                labelmeEntity.shapes.Add(shape);
             }
             try
             {
-                FileStream nFile = new FileStream(filename, FileMode.Create);
-                StreamWriter writer = new StreamWriter(nFile, Encoding.UTF8);
-                writer.Write(labelmeEntity.ToJson());
-                writer.Close();
-                nFile.Close();
+                LabelmeEntity labelmeEntity = GetLabelmeEntity(imageFilePath, gRootObject);
+                System.Text.UTF8Encoding utf8 = new System.Text.UTF8Encoding(false);
+                File.WriteAllText(jsonFileSaveName, labelmeEntity.ToJson(), utf8);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            //for (int i = 0; i < m_vObj.regions.Count; i++)
-            //{
-            //    var shapes = new Labelme.Shapes
-            //    {
-            //        flags = null,
-            //        group_id = null,
-            //        label = m_vObj.regions[i].region_attributes.type,
-            //        shape_type = m_vObj.regions[i].shape_attributes.name == "rect" ? "rectangle" : "rectangle"
-            //    };
-            //    shapes.points = new List<List<double>>();
-
-            //    //    var region = new JObject();
-            //    //    var regattri = new JObject { { "type", m_vObj.regions[i].region_attributes.type } };
-            //    //    region.Add("region_attributes", regattri);
-
-            //    //    var shape = new JObject { { "name", m_vObj.regions[i].shape_attributes.name } };
-            //    //    if ("polygon" == m_vObj.regions[i].shape_attributes.name)
-            //    //    {
-            //    //        var arrX = new JArray(m_vObj.regions[i].shape_attributes.all_points_x.ToList());
-            //    //        var arrY = new JArray(m_vObj.regions[i].shape_attributes.all_points_y.ToList());
-            //    //        shape.Add("all_points_x", arrX);
-            //    //        shape.Add("all_points_y", arrY);
-            //    //    }
-            //    //    else if ("rect" == m_vObj.regions[i].shape_attributes.name)
-            //    //    {
-            //    //        shape.Add("x", m_vObj.regions[i].shape_attributes.x);
-            //    //        shape.Add("y", m_vObj.regions[i].shape_attributes.y);
-            //    //        shape.Add("width", m_vObj.regions[i].shape_attributes.width);
-            //    //        shape.Add("height", m_vObj.regions[i].shape_attributes.height);
-            //    //    }
-            //    //    region.Add("shape_attributes", shape);
-            //    //    regArray.Add(region);
-            //    //}
-
-            //    //rootObj.Add("regions", regArray);
-
-            //    //try
-            //    //{
-            //    //    FileStream nFile = new FileStream(filename, FileMode.Create);
-            //    //    StreamWriter writer = new StreamWriter(nFile, Encoding.UTF8);
-            //    //    writer.Write(rootObj.ToString());
-            //    //    writer.Close();
-            //    //    nFile.Close();
-            //    //}
-            //    //catch (Exception ex)
-            //    //{
-            //    //    throw ex;
-            //    //}
-
-            //    //return rootObj;
-            //}
         }
 
+        /// <summary>
+        /// 获取LabelmeEntity
+        /// </summary>
+        /// <param name="imageFilePath"></param>
+        /// <param name="rootObject"></param>
+        /// <returns></returns>
+        private LabelmeEntity GetLabelmeEntity(string imageFilePath, RootObject rootObject)
+        {
+            var labelmeEntity = new Labelme.LabelmeEntity();
+            labelmeEntity.version = ConfigContext.LabelmeVersion;
+            labelmeEntity.flags = new Labelme.Flag();
+            labelmeEntity.imagePath = rootObject.filename;
+            labelmeEntity.size = rootObject.size;
+            labelmeEntity.file_attributes = rootObject.file_attributes;
+            var guid = Guid.NewGuid().ToString();
+            var tempFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}temp\\{guid}{DirFileHelper.GetExtension(imageFilePath)}";
+            File.Copy(imageFilePath, tempFilePath);
+            labelmeEntity.imageData = Base64ConvenrtHelper.FileToBase64(Path.GetFullPath(tempFilePath));
+            File.Delete(tempFilePath);
+            var whList = ImageHelper.GetImageSize(Path.GetFullPath(imageFilePath));
+            if (whList.Count == 2)
+            {
+                labelmeEntity.imageWidth = whList[0];
+                labelmeEntity.imageHeight = whList[1];
+            }
+            labelmeEntity.shapes = new List<Labelme.Shape>();
+            for (int i = 0; i < rootObject.regions.Count; i++)
+            {
+                var shape = new Labelme.Shape
+                {
+                    label = rootObject.regions[i].region_attributes.type,
+                    group_id = null,
+                    shape_type = rootObject.regions[i].shape_attributes.name,
+                    flags = new Labelme.Flag()
+                };
+                shape.points = new List<List<double>>();
+                if ("polygon" == rootObject.regions[i].shape_attributes.name)
+                {
+                    var tempAllPointsX = rootObject.regions[i].shape_attributes.all_points_x.ToArray();
+                    var tempAllPointsY = rootObject.regions[i].shape_attributes.all_points_y.ToArray();
+                    for (int j = 0; j < tempAllPointsX.Length; j++)
+                    {
+                        var polygonPoint = new List<double>();
+                        polygonPoint.Add(tempAllPointsX[j]);
+                        polygonPoint.Add(tempAllPointsY[j]);
+                        shape.points.Add(polygonPoint);
+                    }
+                }
+                else if ("rectangle" == rootObject.regions[i].shape_attributes.name)
+                {
+                    var rectanglePoint1 = new List<double>();
+                    rectanglePoint1.Add(rootObject.regions[i].shape_attributes.x);
+                    rectanglePoint1.Add(rootObject.regions[i].shape_attributes.y);
+                    shape.points.Add(rectanglePoint1);
+                    var rectanglePoint2 = new List<double>();
+                    rectanglePoint2.Add(rootObject.regions[i].shape_attributes.x + rootObject.regions[i].shape_attributes.width);
+                    rectanglePoint2.Add(rootObject.regions[i].shape_attributes.y + rootObject.regions[i].shape_attributes.height);
+                    shape.points.Add(rectanglePoint2);
+                    shape.x = rootObject.regions[i].shape_attributes.x;
+                    shape.y = rootObject.regions[i].shape_attributes.y;
+                    shape.width = rootObject.regions[i].shape_attributes.width;
+                    shape.height = rootObject.regions[i].shape_attributes.height;
+                }
+                labelmeEntity.shapes.Add(shape);
+            }
+            return labelmeEntity;
+        }
+
+        /// <summary>
+        /// 保存形状列表掉配置文件
+        /// </summary>
+        /// <param name="imageFilePath"></param>
+        /// <param name="drawShapes"></param>
+        /// <param name="jsonFileSaveName"></param>
+        /// <param name="filesize"></param>
+        public void SaveShapesAndJsonFile(string imageFilePath, DrawShapes drawShapes, string jsonFileSaveName, int filesize)
+        {
+            CreateRootObj(drawShapes, imageFilePath, filesize);
+            CreateJsonFile(imageFilePath, jsonFileSaveName);
+        }
     }
 }

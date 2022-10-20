@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using LabelImageSystem.Json;
 using LabelImageSystem.Shapes;
+using Zach.Util;
 
 namespace LabelImageSystem
 {
@@ -233,8 +234,10 @@ namespace LabelImageSystem
                         string[] files = Directory.GetFiles(path, "*.*");
                         foreach (string file in files)
                         {
-                            if (file.EndsWith(".bmp") || file.EndsWith(".BMP") || file.EndsWith(".jpg") || file.EndsWith(".JPG")
-                                || file.EndsWith(".PNG") || file.EndsWith(".png"))
+                            if (DirFileHelper.GetExtension(file).ToUpper() == ".JPG"
+                                || DirFileHelper.GetExtension(file).ToUpper() == ".BMP"
+                                || DirFileHelper.GetExtension(file).ToUpper() == ".JPEG"
+                                || DirFileHelper.GetExtension(file).ToUpper() == ".PNG")
                             {
                                 TreeNode subNode = new TreeNode(new DirectoryInfo(file).Name); //实例化
                                 subNode.Name = new DirectoryInfo(file).FullName;               //完整目录
@@ -526,9 +529,8 @@ namespace LabelImageSystem
         {
             if (null != m_currentFileName)
             {
-                string jsonName = m_currentFileName.Substring(0, m_currentFileName.LastIndexOf('.'));
-                jsonName += ".json";
-                m_JsonIT.Save(m_currentFileName, m_ShpesShow, jsonName, 0);
+                string jsonName = m_currentFileName.Substring(0, m_currentFileName.LastIndexOf('.')) + ".json";
+                m_JsonIT.SaveShapesAndJsonFile(m_currentFileName, m_ShpesShow, jsonName, 0);
             }
         }
 
@@ -591,9 +593,8 @@ namespace LabelImageSystem
                 m_currentFileName = name;
                 this.pictureBox1.Image = Image.FromFile(name);
 
-                string jsonName = m_currentFileName.Substring(0, m_currentFileName.LastIndexOf('.'));
-                jsonName += ".json";
-                m_ShpesShow = m_JsonIT.Load(jsonName);
+                string jsonFileName = m_currentFileName.Substring(0, m_currentFileName.LastIndexOf('.')) + ".json";
+                m_ShpesShow = m_JsonIT.LoadJsonFileName(jsonFileName);
 
                 if (null == m_ShpesShow)
                 {

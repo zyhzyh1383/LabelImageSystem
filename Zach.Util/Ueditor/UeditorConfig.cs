@@ -14,7 +14,8 @@ namespace Zach.Util.Ueditor
         private static bool noCache = true;
         private static JObject BuildItems()
         {
-            var json = File.ReadAllText(HttpContext.Current.Server.MapPath("~/Content/ueditor/config/config.json"));
+
+            var json = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath("~/Content/ueditor/config/config.json"));
             return JObject.Parse(json);
         }
 
