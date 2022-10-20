@@ -167,7 +167,7 @@
       <Project>{2A131997-6925-4F8A-82C4-16C7C173BE65}</Project>
       <Name>Zach.Entity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Zach.Log\Zach.Loger.csproj">
+    <ProjectReference Include="..\Zach.Loger\Zach.Loger.csproj">
       <Project>{93bb5880-3afe-4174-b441-3e808d1193a1}</Project>
       <Name>Zach.Loger</Name>
     </ProjectReference>

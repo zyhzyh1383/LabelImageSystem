@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Mapping", "Zach.Mappin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Test", "Zach.Test\Zach.Test.csproj", "{43C5D93D-0BA0-4145-9B07-3C777E603E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Loger", "Zach.Log\Zach.Loger.csproj", "{93BB5880-3AFE-4174-B441-3E808D1193A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Loger", "Zach.Loger\Zach.Loger.csproj", "{93BB5880-3AFE-4174-B441-3E808D1193A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
