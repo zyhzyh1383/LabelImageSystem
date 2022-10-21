@@ -28,6 +28,7 @@ namespace LabelImageSystem
             ConfigContext.file_attributes = Config.file_attributes;
             ConfigContext.coco=Config.coco;
             ConfigContext.train = Config.train;
+            ConfigContext.export = Config.export;
         }
     }
 }

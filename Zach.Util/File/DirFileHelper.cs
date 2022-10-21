@@ -210,9 +210,16 @@ namespace Zach.Util
         /// <param name="dir">要删除的目录路径和名称</param>
         public static void DeleteDir(string dir)
         {
-            if (dir.Length == 0) return;
-            if (Directory.Exists(System.Web.HttpContext.Current.Request.PhysicalApplicationPath + "\\" + dir))
-                Directory.Delete(System.Web.HttpContext.Current.Request.PhysicalApplicationPath + "\\" + dir);
+            try
+            {
+                if (dir.Length == 0) return;
+                if (Directory.Exists(System.Web.HttpContext.Current.Request.PhysicalApplicationPath + "\\" + dir))
+                    Directory.Delete(System.Web.HttpContext.Current.Request.PhysicalApplicationPath + "\\" + dir);
+            }
+            catch
+            {
+                Directory.Delete(dir,true);
+            }
         }
         #endregion
 
@@ -759,8 +766,15 @@ namespace Zach.Util
         public static string ReadAllText(string path)
         {
             return File.ReadAllText(path);
-        } 
+        }
         #endregion
 
+
+        #region 返回目录信息
+        public static string GetDirectoryName(string path)
+        {
+            return Path.GetDirectoryName(path);
+        } 
+        #endregion
     }
 }

@@ -14,6 +14,8 @@ namespace LabelImageSystem
         public static string file_attributes { get; set; }
         public static string coco { get; set; }
         public static string train { get; set; }
+
+        public static string export { get; set; }
     }
 
     public class Config
@@ -27,5 +29,7 @@ namespace LabelImageSystem
         public string coco { get; set; }
 
         public string train { get; set; }
+
+        public string export { get; set; }
     }
 }

@@ -2,6 +2,7 @@
   "ShapeType": "0",
   "LabelmeVersion": "5.0.1",
   "file_attributes": "Cpoyright © 福州国化智能技术有限公司 All Rights Reserved.",
-  "coco": "python labelme2coco.py --input_dir images --output_dir coco --labels labels.txt",
-  "train": "python PaddleDetection/tools/train.py -c PaddleDetection/configs/faster_rcnn/faster_rcnn_r50_vd_fpn_ssld_2x_coco.yml --eval --use_vdl=true"
+  "coco": "python labelme2coco.py --input_dir @input_dir --output_dir @output_dir --labels labels.txt",
+  "train": "python PaddleDetection/tools/train.py -c PaddleDetection/configs/faster_rcnn/faster_rcnn_r50_vd_fpn_ssld_2x_coco.yml --eval --use_vdl=true",
+  "export": "python PaddleDetection/tools/export_model.py -c PaddleDetection/configs/faster_rcnn/faster_rcnn_r50_vd_fpn_ssld_2x_coco.yml -o weights=@save_dir/faster_rcnn_r50_vd_fpn_ssld_2x_coco/model_final.pdparams --output_dir=@output_dir"
 }

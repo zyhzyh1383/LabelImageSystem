@@ -443,5 +443,12 @@ namespace Zach.Util
         }
 
         #endregion
+
+        public static string GetStrValue(object obj, string defaultValue)
+        {
+            if (obj.IsEmpty() && DBNull.Value == obj)
+                return defaultValue;
+            return Convert.ToString(obj);
+        }
     }
 }
