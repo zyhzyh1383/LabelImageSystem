@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Test", "Zach.Test\Zach
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.Loger", "Zach.Loger\Zach.Loger.csproj", "{93BB5880-3AFE-4174-B441-3E808D1193A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zach.PaddleDetection", "Zach.PaddleDetection\Zach.PaddleDetection.csproj", "{B2FCA2FA-2C9D-40E4-8059-02959963AB2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93BB5880-3AFE-4174-B441-3E808D1193A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2FCA2FA-2C9D-40E4-8059-02959963AB2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FCA2FA-2C9D-40E4-8059-02959963AB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FCA2FA-2C9D-40E4-8059-02959963AB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FCA2FA-2C9D-40E4-8059-02959963AB2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

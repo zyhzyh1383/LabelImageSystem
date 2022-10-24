@@ -796,6 +796,23 @@ namespace LabelImageSystem
                 MessageShow.Show(ex.Message);
             }
         }
+
+
+        private void 自动标注图片ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AutoLabelImageForm autoLabelImageForm= new AutoLabelImageForm();
+                autoLabelImageForm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                _log.WriteFormatError(ex);
+                MessageShow.Show(ex.Message);
+            }
+        }
+
+
         /// <summary>
         /// 调佣Python脚本
         /// </summary>

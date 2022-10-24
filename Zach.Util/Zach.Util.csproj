@@ -101,6 +101,7 @@
     <Compile Include="StringExtension.cs" />
     <Compile Include="String\Const.cs" />
     <Compile Include="String\Str.cs" />
+    <Compile Include="TaskHelper.cs" />
     <Compile Include="Time\Time.cs" />
     <Compile Include="Tree\TreeDataMake.cs" />
     <Compile Include="Tree\TreeModel.cs" />

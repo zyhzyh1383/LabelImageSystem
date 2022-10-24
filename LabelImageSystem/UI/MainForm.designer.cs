@@ -64,6 +64,7 @@ namespace LabelImageSystem
             this.数据集转cocoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.训练cocoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.导出模型ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.自动标注图片ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directoryTree = new System.Windows.Forms.TreeView();
             this.groupBox_objTypes = new System.Windows.Forms.GroupBox();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -73,6 +74,8 @@ namespace LabelImageSystem
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox_Process = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.chklbPictures = new System.Windows.Forms.CheckedListBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.rdoOk = new System.Windows.Forms.RadioButton();
             this.rdoNot = new System.Windows.Forms.RadioButton();
@@ -80,19 +83,17 @@ namespace LabelImageSystem
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.chklbPictures = new System.Windows.Forms.CheckedListBox();
-            this.panel8 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // directoryIcons
@@ -132,7 +133,8 @@ namespace LabelImageSystem
             this.ToolStripMenuItem_AutoSave,
             this.数据集转cocoToolStripMenuItem,
             this.训练cocoToolStripMenuItem,
-            this.导出模型ToolStripMenuItem});
+            this.导出模型ToolStripMenuItem,
+            this.自动标注图片ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1349, 35);
@@ -231,6 +233,14 @@ namespace LabelImageSystem
             this.导出模型ToolStripMenuItem.Size = new System.Drawing.Size(99, 31);
             this.导出模型ToolStripMenuItem.Text = "导出模型";
             this.导出模型ToolStripMenuItem.Click += new System.EventHandler(this.导出模型ToolStripMenuItem_Click);
+            // 
+            // 自动标注图片ToolStripMenuItem
+            // 
+            this.自动标注图片ToolStripMenuItem.Image = global::LabelImageSystem.Properties.Resources.faliao;
+            this.自动标注图片ToolStripMenuItem.Name = "自动标注图片ToolStripMenuItem";
+            this.自动标注图片ToolStripMenuItem.Size = new System.Drawing.Size(147, 31);
+            this.自动标注图片ToolStripMenuItem.Text = "自动标注数据集";
+            this.自动标注图片ToolStripMenuItem.Click += new System.EventHandler(this.自动标注图片ToolStripMenuItem_Click);
             // 
             // directoryTree
             // 
@@ -334,6 +344,27 @@ namespace LabelImageSystem
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "File List";
             // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.chklbPictures);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel8.Location = new System.Drawing.Point(3, 34);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(434, 165);
+            this.panel8.TabIndex = 13;
+            // 
+            // chklbPictures
+            // 
+            this.chklbPictures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chklbPictures.FormattingEnabled = true;
+            this.chklbPictures.Location = new System.Drawing.Point(0, 0);
+            this.chklbPictures.Name = "chklbPictures";
+            this.chklbPictures.ScrollAlwaysVisible = true;
+            this.chklbPictures.Size = new System.Drawing.Size(434, 165);
+            this.chklbPictures.TabIndex = 10;
+            this.chklbPictures.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chklbPictures_ItemCheck);
+            this.chklbPictures.SelectedIndexChanged += new System.EventHandler(this.chklbPictures_SelectedIndexChanged);
+            // 
             // panel7
             // 
             this.panel7.Controls.Add(this.rdoOk);
@@ -342,13 +373,13 @@ namespace LabelImageSystem
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel7.Location = new System.Drawing.Point(3, 17);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(434, 29);
+            this.panel7.Size = new System.Drawing.Size(434, 17);
             this.panel7.TabIndex = 12;
             // 
             // rdoOk
             // 
             this.rdoOk.AutoSize = true;
-            this.rdoOk.Location = new System.Drawing.Point(167, 7);
+            this.rdoOk.Location = new System.Drawing.Point(167, 1);
             this.rdoOk.Name = "rdoOk";
             this.rdoOk.Size = new System.Drawing.Size(59, 16);
             this.rdoOk.TabIndex = 2;
@@ -360,7 +391,7 @@ namespace LabelImageSystem
             // rdoNot
             // 
             this.rdoNot.AutoSize = true;
-            this.rdoNot.Location = new System.Drawing.Point(87, 7);
+            this.rdoNot.Location = new System.Drawing.Point(87, 1);
             this.rdoNot.Name = "rdoNot";
             this.rdoNot.Size = new System.Drawing.Size(59, 16);
             this.rdoNot.TabIndex = 1;
@@ -372,7 +403,7 @@ namespace LabelImageSystem
             // rdoAll
             // 
             this.rdoAll.AutoSize = true;
-            this.rdoAll.Location = new System.Drawing.Point(17, 7);
+            this.rdoAll.Location = new System.Drawing.Point(17, 1);
             this.rdoAll.Name = "rdoAll";
             this.rdoAll.Size = new System.Drawing.Size(47, 16);
             this.rdoAll.TabIndex = 0;
@@ -416,27 +447,6 @@ namespace LabelImageSystem
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // chklbPictures
-            // 
-            this.chklbPictures.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chklbPictures.FormattingEnabled = true;
-            this.chklbPictures.Location = new System.Drawing.Point(0, 0);
-            this.chklbPictures.Name = "chklbPictures";
-            this.chklbPictures.ScrollAlwaysVisible = true;
-            this.chklbPictures.Size = new System.Drawing.Size(434, 153);
-            this.chklbPictures.TabIndex = 10;
-            this.chklbPictures.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chklbPictures_ItemCheck);
-            this.chklbPictures.SelectedIndexChanged += new System.EventHandler(this.chklbPictures_SelectedIndexChanged);
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.chklbPictures);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(3, 46);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(434, 153);
-            this.panel8.TabIndex = 13;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -463,12 +473,12 @@ namespace LabelImageSystem
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel8.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -509,6 +519,7 @@ namespace LabelImageSystem
         private System.Windows.Forms.RadioButton rdoNot;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.CheckedListBox chklbPictures;
+        private System.Windows.Forms.ToolStripMenuItem 自动标注图片ToolStripMenuItem;
     }
 }
 
