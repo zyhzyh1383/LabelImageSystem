@@ -29,5 +29,7 @@ namespace Zach.Loger
         {
             return new Log(LogManager.GetLogger(str));
         }
+
+
     }
 }

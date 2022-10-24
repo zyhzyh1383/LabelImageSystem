@@ -41,6 +41,9 @@
             this.btnSaveDir = new System.Windows.Forms.Button();
             this.txtSaveDir = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnWeightDir = new System.Windows.Forms.Button();
+            this.txtWeightDir = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudEpoch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudClasses)).BeginInit();
             this.SuspendLayout();
@@ -78,7 +81,7 @@
             // 
             // btnDatasetDir
             // 
-            this.btnDatasetDir.Location = new System.Drawing.Point(626, 73);
+            this.btnDatasetDir.Location = new System.Drawing.Point(681, 110);
             this.btnDatasetDir.Name = "btnDatasetDir";
             this.btnDatasetDir.Size = new System.Drawing.Size(75, 23);
             this.btnDatasetDir.TabIndex = 8;
@@ -88,16 +91,16 @@
             // 
             // txtDatasetDir
             // 
-            this.txtDatasetDir.Location = new System.Drawing.Point(116, 74);
+            this.txtDatasetDir.Location = new System.Drawing.Point(116, 111);
             this.txtDatasetDir.Name = "txtDatasetDir";
             this.txtDatasetDir.ReadOnly = true;
-            this.txtDatasetDir.Size = new System.Drawing.Size(512, 21);
+            this.txtDatasetDir.Size = new System.Drawing.Size(565, 21);
             this.txtDatasetDir.TabIndex = 7;
             // 
             // lbl_dataset_dir
             // 
             this.lbl_dataset_dir.AutoSize = true;
-            this.lbl_dataset_dir.Location = new System.Drawing.Point(43, 78);
+            this.lbl_dataset_dir.Location = new System.Drawing.Point(43, 115);
             this.lbl_dataset_dir.Name = "lbl_dataset_dir";
             this.lbl_dataset_dir.Size = new System.Drawing.Size(53, 12);
             this.lbl_dataset_dir.TabIndex = 6;
@@ -121,7 +124,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(359, 180);
+            this.btnCancel.Location = new System.Drawing.Point(359, 214);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 12;
@@ -131,7 +134,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(223, 180);
+            this.btnOK.Location = new System.Drawing.Point(223, 214);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 11;
@@ -141,7 +144,7 @@
             // 
             // btnSaveDir
             // 
-            this.btnSaveDir.Location = new System.Drawing.Point(626, 118);
+            this.btnSaveDir.Location = new System.Drawing.Point(680, 155);
             this.btnSaveDir.Name = "btnSaveDir";
             this.btnSaveDir.Size = new System.Drawing.Size(75, 23);
             this.btnSaveDir.TabIndex = 15;
@@ -151,26 +154,58 @@
             // 
             // txtSaveDir
             // 
-            this.txtSaveDir.Location = new System.Drawing.Point(116, 119);
+            this.txtSaveDir.Location = new System.Drawing.Point(116, 156);
             this.txtSaveDir.Name = "txtSaveDir";
             this.txtSaveDir.ReadOnly = true;
-            this.txtSaveDir.Size = new System.Drawing.Size(512, 21);
+            this.txtSaveDir.Size = new System.Drawing.Size(565, 21);
             this.txtSaveDir.TabIndex = 14;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(19, 123);
+            this.label3.Location = new System.Drawing.Point(19, 160);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(77, 12);
             this.label3.TabIndex = 13;
             this.label3.Text = "模型输出路径";
             // 
+            // btnWeightDir
+            // 
+            this.btnWeightDir.Location = new System.Drawing.Point(680, 69);
+            this.btnWeightDir.Name = "btnWeightDir";
+            this.btnWeightDir.Size = new System.Drawing.Size(75, 23);
+            this.btnWeightDir.TabIndex = 18;
+            this.btnWeightDir.Text = "...";
+            this.btnWeightDir.UseVisualStyleBackColor = true;
+            this.btnWeightDir.Click += new System.EventHandler(this.btnWeightDir_Click);
+            // 
+            // txtWeightDir
+            // 
+            this.txtWeightDir.Location = new System.Drawing.Point(116, 70);
+            this.txtWeightDir.Name = "txtWeightDir";
+            this.txtWeightDir.ReadOnly = true;
+            this.txtWeightDir.Size = new System.Drawing.Size(565, 21);
+            this.txtWeightDir.TabIndex = 17;
+            this.txtWeightDir.Text = "https://paddledet.bj.bcebos.com/models/pretrained/ResNet50_vd_ssld_v2_pretrained." +
+    "pdparams";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(18, 74);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(77, 12);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "权重文件路径";
+            // 
             // TrainConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(761, 226);
+            this.ClientSize = new System.Drawing.Size(837, 258);
+            this.Controls.Add(this.btnWeightDir);
+            this.Controls.Add(this.txtWeightDir);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btnSaveDir);
             this.Controls.Add(this.txtSaveDir);
             this.Controls.Add(this.label3);
@@ -208,5 +243,8 @@
         private System.Windows.Forms.Button btnSaveDir;
         private System.Windows.Forms.TextBox txtSaveDir;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnWeightDir;
+        private System.Windows.Forms.TextBox txtWeightDir;
+        private System.Windows.Forms.Label label4;
     }
 }

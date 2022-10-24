@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 namespace Zach.Loger
 {
     /// <summary>
@@ -87,6 +88,52 @@ namespace Zach.Loger
             //strInfo.Append("7. 实例: " + logMessage.ExceptionRemark + "\r\n");
             strInfo.Append("-----------------------------------------------------------------------------------------------------------------------------\r\n");
             return strInfo.ToString();
+        }
+
+        public string EasyFormat(string content, LogLevel logLevel)
+        {
+            StringBuilder strInfo = new StringBuilder();
+            strInfo.AppendLine("︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻︻");
+            strInfo.Append("1. 调试: >> 操作时间: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\r\n");
+            switch (logLevel)
+            {
+                case LogLevel.Debug:
+                    strInfo.Append("2. 调试: " + content + "\r\n");
+                    break;
+                case LogLevel.Info:
+                    strInfo.Append("2. 信息: " + content + "\r\n");
+                    break;
+                case LogLevel.Error:
+                    strInfo.Append("2. 错误: " + content + "\r\n");
+                    break;
+                case LogLevel.Warning:
+                    strInfo.Append("2. 警告: " + content + "\r\n");
+                    break;
+                default:
+                    break;
+            }
+            strInfo.AppendLine("︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼︼");
+            return strInfo.ToString();
+        }
+
+        public string EasyFormatDebug(string content) 
+        { 
+            return EasyFormat(content, LogLevel.Debug);
+        }
+
+        public string EasyFormatInfo(string content)
+        {
+            return EasyFormat(content, LogLevel.Info);
+        }
+
+        public string EasyFormatError(string content)
+        {
+            return EasyFormat(content, LogLevel.Error);
+        }
+
+        public string EasyFormatWarning(string content)
+        {
+            return EasyFormat(content, LogLevel.Warning);
         }
     }
 }

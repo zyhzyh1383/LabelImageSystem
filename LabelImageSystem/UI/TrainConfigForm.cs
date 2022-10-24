@@ -17,7 +17,7 @@ namespace LabelImageSystem
     public partial class TrainConfigForm : Form
     {
 
-        public delegate void DelegateTrainConfigHandler(int epoch, int numClasses, bool useGpu, string datasetDir, string saveDir);
+        public delegate void DelegateTrainConfigHandler(int epoch, int numClasses, bool useGpu, string datasetDir, string saveDir, string pretrain_weights);
 
         public event DelegateTrainConfigHandler TrainConfigEvent;
 
@@ -51,7 +51,17 @@ namespace LabelImageSystem
             }
         }
 
-
+        private void btnWeightDir_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择文件夹";
+            dialog.Filter = "所有文件(*.*)|*.*";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtWeightDir.Text = dialog.FileName;
+            }
+        }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
@@ -60,6 +70,11 @@ namespace LabelImageSystem
             if (epoch == 0 || numClasses == 0)
             {
                 MessageShow.Show("训练轮数,标签数量需为不等于的正整数!");
+                return;
+            }
+            if (txtWeightDir.Text.IsEmpty())
+            {
+                MessageShow.Show("权重文件路径不能为空");
                 return;
             }
             if (txtDatasetDir.Text.IsEmpty())
@@ -74,7 +89,7 @@ namespace LabelImageSystem
             }
             if (TrainConfigEvent != null)
             {
-                TrainConfigEvent.Invoke(epoch, numClasses, chkUseGpu.Checked, txtDatasetDir.Text.Trim(), txtSaveDir.Text.Trim());
+                TrainConfigEvent.Invoke(epoch, numClasses, chkUseGpu.Checked, txtDatasetDir.Text.Trim(), txtSaveDir.Text.Trim(), txtWeightDir.Text.Trim());
             }
             this.DialogResult = DialogResult.OK;
             this.Close();
