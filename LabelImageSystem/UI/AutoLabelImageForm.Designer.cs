@@ -94,9 +94,9 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(127, 168);
+            this.btnStart.Location = new System.Drawing.Point(182, 168);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(121, 22);
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 12;
             this.btnStart.Text = "开始";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -104,9 +104,9 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(276, 168);
+            this.btnStop.Location = new System.Drawing.Point(296, 168);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(121, 22);
+            this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 13;
             this.btnStop.Text = "停止";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -126,6 +126,7 @@
             this.Controls.Add(this.txtModelDir);
             this.Controls.Add(this.label1);
             this.Name = "AutoLabelImageForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "自动标注数据集";
             this.ResumeLayout(false);
             this.PerformLayout();

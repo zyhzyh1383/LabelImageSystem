@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /sources/v1/application/CoverageTestingSystem/Python
 /sources/v1/application/CoverageTestingSystem/Tests/VisonMasterSimulatorForm
+/部署包

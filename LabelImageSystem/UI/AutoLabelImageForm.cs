@@ -35,8 +35,8 @@ namespace LabelImageSystem
             InitializeComponent();
             PBress = new MyProgressBar()
             {
-                Location = new Point(102, 109),
-                Size = new Size(585, 30),
+                Location = new Point(20, Bottom - 150),
+                Size = new Size(Width - 60, 50),
                 Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
             this.Controls.Add(PBress);
@@ -82,23 +82,14 @@ namespace LabelImageSystem
                 {
                     return;
                 }
-                if (jsonFiles.FindAll(f => DirFileHelper.GetDirectoryName(f) == DirFileHelper.GetDirectoryName(imgFile)
-                && DirFileHelper.GetFileNameNoExtension(f) == DirFileHelper.GetFileNameNoExtension(imgFile)).Count > 0)
-                {
-                    count++;
-                    PBress.Value = PBress.Value % 100 + 1;
-                }
-                else
-                {
-                    GetLabelmeEntityAndSaveJsonFile(imgFile);
-                }
+                GetLabelmeEntityAndSaveJsonFile(jsonFiles, imgFile);
             }, 2, false);
         }
 
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            if (PBress.Maximum!=PBress.Value)
+            if (PBress.Maximum != PBress.Value)
             {
                 if (MessageShow.Confirm("识别未完成，确认提前结束?"))
                 {
@@ -113,10 +104,21 @@ namespace LabelImageSystem
         /// 获取labelme格式并保存成json文件
         /// </summary>
         /// <param name="imgFile"></param>
-        private void GetLabelmeEntityAndSaveJsonFile(string imgFile)
+        private void GetLabelmeEntityAndSaveJsonFile(List<string> jsonFiles, string imgFile)
         {
             try
             {
+                if (jsonFiles.FindAll(f => DirFileHelper.GetDirectoryName(f) == DirFileHelper.GetDirectoryName(imgFile)
+                                        && DirFileHelper.GetFileNameNoExtension(f) == DirFileHelper.GetFileNameNoExtension(imgFile)).Count > 0)
+                {
+                    lock (_lock)
+                    {
+                        count++;
+                        PBress.Value = count;
+                        if (PBress.Maximum == count) btnStart.Enabled = true;
+                        return;
+                    }
+                }
                 var modelDir = txtModelDir.Text.Trim();
                 var result = PaddleDetectionHelper.GetDetectionResultList(imgFile, modelDir, ModelType.Unknown, Convert.ToSingle(0.8), false, false);
                 var resultList = result.DetectionResult.Where(f => f.Confidence > Convert.ToSingle(0.8f)).ToList();
@@ -166,12 +168,9 @@ namespace LabelImageSystem
                 File.WriteAllText(jsonFileSaveName, labelmeEntity.ToJson(), utf8);
                 lock (_lock)
                 {
-                    count = count + 1;
+                    count++;
                     PBress.Value = count;
-                    if (PBress.Maximum == count)
-                    {
-                        btnStart.Enabled = true;
-                    }
+                    if (PBress.Maximum == count) btnStart.Enabled = true;
                 }
             }
             catch (Exception ex)

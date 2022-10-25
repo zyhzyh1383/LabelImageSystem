@@ -26,9 +26,9 @@ namespace LabelImageSystem
             ConfigContext.shapeType = Config.shapeType;
             ConfigContext.LabelmeVersion = Config.LabelmeVersion;
             ConfigContext.file_attributes = Config.file_attributes;
-            ConfigContext.coco=Config.coco;
-            ConfigContext.train = Config.train;
-            ConfigContext.export = Config.export;
+            ConfigContext.coco = Config.coco.Replace("@debug/", AppDomain.CurrentDomain.BaseDirectory);
+            ConfigContext.train = Config.train.Replace("@debug/", AppDomain.CurrentDomain.BaseDirectory);
+            ConfigContext.export = Config.export.Replace("@debug/", AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

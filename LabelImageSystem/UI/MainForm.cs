@@ -694,6 +694,19 @@ namespace LabelImageSystem
                 {
                     return;
                 }
+                var imageFiles = DirFileHelper.GetFileNames(inputDir, "*.jpg", false).ToList();
+                var jsonFiles = DirFileHelper.GetFileNames(inputDir, "*.json", false).ToList();
+                if (imageFiles.Count == 0)
+                {
+                    MessageShow.Show("指定数据集目录下没有jpg格式的图片");
+                    return;
+                }
+                if (imageFiles.Count != jsonFiles.Count)
+                {
+                    var str = imageFiles.Count > jsonFiles.Count ? "imageFiles more" : "jsonFiles more";
+                    MessageShow.Show("图片数量与标注Json数量不一致,请确认是否全部标注完成!" + str);
+                    return;
+                }
                 var labels = $"{AppDomain.CurrentDomain.BaseDirectory}fileTemplate\\labels.txt";
                 var labelsContent = DirFileHelper.ReadAllText(labels);
                 if (labelsContent.IsEmpty())
@@ -802,7 +815,7 @@ namespace LabelImageSystem
         {
             try
             {
-                AutoLabelImageForm autoLabelImageForm= new AutoLabelImageForm();
+                AutoLabelImageForm autoLabelImageForm = new AutoLabelImageForm();
                 autoLabelImageForm.ShowDialog();
             }
             catch (Exception ex)
