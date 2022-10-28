@@ -45,7 +45,7 @@ namespace LabelImageSystem
         private void btnModelDir_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "请选择模型的路径";
+            dialog.Description = "请选择模型inference_model\faster_rcnn_r50_vd_fpn_ssld_2x_coco所在路径";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 txtModelDir.Text = dialog.SelectedPath;
@@ -55,7 +55,7 @@ namespace LabelImageSystem
         private void btnImageDir_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "请选择数据集的路径";
+            dialog.Description = "请选择图片数据集的路径";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 txtImageDir.Text = dialog.SelectedPath;
@@ -91,12 +91,9 @@ namespace LabelImageSystem
         {
             if (PBress.Maximum != PBress.Value)
             {
-                if (MessageShow.Confirm("识别未完成，确认提前结束?"))
-                {
-                    btnStart.Enabled = true;
-                    btnStop.Enabled = false;
-                    runFlag = false;
-                }
+                btnStart.Enabled = true;
+                btnStop.Enabled = false;
+                runFlag = false;
             }
         }
 

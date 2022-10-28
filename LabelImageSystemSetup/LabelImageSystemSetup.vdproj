@@ -7641,12 +7641,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_727845625E694380B1D30D36A454F9E4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_72A48F3E5E3B4792962D4A8339A73EED"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -16636,6 +16630,12 @@
         "Entry"
         {
         "MsmKey" = "8:_EF3B34016BA64A8482AD03CB93558568"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EF7013912B6B4BAF80687C428B822A99"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -43316,26 +43316,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_727845625E694380B1D30D36A454F9E4"
-            {
-            "SourcePath" = "8:C:\\Users\\GHZN\\Desktop\\Dp.ico"
-            "TargetName" = "8:Dp.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_257D1BD431F742E4AC71F0D29CF77411"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72A48F3E5E3B4792962D4A8339A73EED"
             {
             "SourcePath" = "8:..\\LabelImageSystem\\bin\\Debug\\PaddleDetection\\test_tipc\\configs\\keypoint\\dark_hrnet_w32_256x192_train_infer_python.txt"
@@ -68713,6 +68693,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EF7013912B6B4BAF80687C428B822A99"
+            {
+            "SourcePath" = "8:..\\LabelImageSystem\\bin\\Debug\\Dp.ico"
+            "TargetName" = "8:Dp.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_257D1BD431F742E4AC71F0D29CF77411"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EF7CAE8370624C0FB40FF91261C7FE31"
             {
             "SourcePath" = "8:..\\LabelImageSystem\\bin\\Debug\\PaddleDetection\\test_tipc\\configs\\ppyolo\\ppyolo_r50vd_dcn_1x_coco_FPGM_train_infer_python.txt"
@@ -76051,7 +76051,7 @@
             "Target" = "8:_88FF9EF0A3FC4951B62BA800A865B4A0"
             "Folder" = "8:_70B0813A6F2044F5969776C753FFDC81"
             "WorkingFolder" = "8:_257D1BD431F742E4AC71F0D29CF77411"
-            "Icon" = "8:_727845625E694380B1D30D36A454F9E4"
+            "Icon" = "8:_EF7013912B6B4BAF80687C428B822A99"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D506DB8C66DC40BE93B5F06C44DB5A03"

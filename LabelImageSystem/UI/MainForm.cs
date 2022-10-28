@@ -789,16 +789,13 @@ namespace LabelImageSystem
             try
             {
                 // "export": "python PaddleDetection/tools/export_model.py -c PaddleDetection/configs/faster_rcnn/faster_rcnn_r50_vd_fpn_ssld_2x_coco.yml -o weights=@save_dir/faster_rcnn_r50_vd_fpn_ssld_2x_coco/model_final.pdparams --output_dir=@output_dir"
-                if (gTrainOutPutDir.IsEmpty())
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
+                dialog.Description = "请选择要导出的模型ouput完整路径";
+                if (dialog.ShowDialog() == DialogResult.Cancel)
                 {
-                    FolderBrowserDialog dialog = new FolderBrowserDialog();
-                    dialog.Description = "请选择要导出的模型路径";
-                    if (dialog.ShowDialog() == DialogResult.Cancel)
-                    {
-                        return;
-                    }
-                    gTrainOutPutDir = dialog.SelectedPath;
+                    return;
                 }
+                gTrainOutPutDir = dialog.SelectedPath;
                 ConfigContext.export = ConfigContext.export.Replace("@save_dir", gTrainOutPutDir).Replace("@output_dir", $"{gTrainOutPutDir.Replace("output", "inference_model")}");
                 AddOperationMsg($"导出模型命令:{Environment.NewLine}{ConfigContext.export}");
                 InvokePython(ConfigContext.export);

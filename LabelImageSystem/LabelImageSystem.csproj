@@ -299,6 +299,7 @@
     <Content Include="Content\Img\cursor.png" />
     <Content Include="Content\Img\delbinding.png" />
     <Content Include="Content\Img\discarde.png" />
+    <Content Include="Content\Img\Dp.ico" />
     <Content Include="Content\Img\edit.png" />
     <Content Include="Content\Img\ellipse.png" />
     <Content Include="Content\Img\extend.png" />
