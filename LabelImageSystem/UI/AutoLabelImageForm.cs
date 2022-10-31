@@ -45,7 +45,7 @@ namespace LabelImageSystem
         private void btnModelDir_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.Description = "请选择模型inference_model\faster_rcnn_r50_vd_fpn_ssld_2x_coco所在路径";
+            dialog.Description = "请选择模型inference_model\\faster_rcnn_r50_vd_fpn_ssld_2x_coco所在路径";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 txtModelDir.Text = dialog.SelectedPath;
